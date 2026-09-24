@@ -11,8 +11,9 @@ export default function SetSettings() {
   const { operation, operandLengths, setProblemCount } = settings;
 
   useEffect(() => {
+    // Only enforce this rule for SUBTRACTION, not DIVISION anymore
     if (
-      ['SUBTRACTION', 'DIVISION'].includes(operation) &&
+      operation === 'SUBTRACTION' &&
       operandLengths[1] > operandLengths[0]
     ) {
       setSetting('operandLengths', [operandLengths[0], operandLengths[0]]);
@@ -54,7 +55,7 @@ export default function SetSettings() {
               pluralize('digit', length)
             )}
             disabled={
-              ['SUBTRACTION', 'DIVISION'].includes(operation)
+              operation === 'SUBTRACTION'
                 ? Array(operandLengths[0])
                     .fill(false)
                     .concat(

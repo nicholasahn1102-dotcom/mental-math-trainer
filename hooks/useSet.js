@@ -17,7 +17,7 @@ export default function useSet(
   const [answerString, setAnswerString] = useState('');
   const [setStartTime] = useState(Date.now());
   const [problemStartTime, setProblemStartTime] = useState(Date.now());
-  const maxAnswerLength = getMaxAnswerLength(operands, operation);
+  const maxAnswerLength = getMaxAnswerLength(operands, operation, operandLengths);
 
   const clear = () => {
     setAnswerString('');
@@ -136,16 +136,17 @@ export default function useSet(
   };
 }
 
-function getMaxAnswerLength(operands, operation) {
-  const operandLengths = operands.map((operand) => operand.toString().length);
+function getMaxAnswerLength(operands, operation, settingsOperandLengths) {
+  const actualOperandLengths = operands.map((operand) => operand.toString().length);
   switch (operation) {
     case 'ADDITION':
-      return Math.max(...operandLengths) + 1;
+      return Math.max(...actualOperandLengths) + 1;
     case 'SUBTRACTION':
+      return actualOperandLengths[0];
     case 'DIVISION':
-      return operandLengths[0];
+      return settingsOperandLengths[0];
     case 'MULTIPLICATION':
-      return operandLengths[0] + operandLengths[1];
+      return actualOperandLengths[0] + actualOperandLengths[1];
   }
 }
 
@@ -180,35 +181,20 @@ function getOperands(operation, operandLengths) {
       const subtrahend = getRandomInteger(minMinuend - 1, minuend);
       return [minuend, subtrahend];
     case 'DIVISION':
-      let divisor, minQuotient, maxQuotient;
-      if (operandLengths[0] === operandLengths[1]) {
-        if (operandLengths[0] === 1) {
-          // Exclude 1.
-          divisor = getRandomInteger(2, 5);
-        } else {
-          const minDivisor = Math.pow(10, operandLengths[0] - 1);
-          const maxDivisor = Math.pow(10, operandLengths[0]) / 2;
-          divisor = getRandomInteger(minDivisor, maxDivisor);
-        }
-        minQuotient = 2;
-        // maxQuotient is inclusive.
-        maxQuotient = Math.floor(
-          (Math.pow(10, operandLengths[0]) - 1) / divisor
-        );
-      } else {
-        if (operandLengths[1] === 1) {
-          // Exclude 1.
-          divisor = getRandomInteger(2, 10);
-        } else {
-          divisor = getRandomIntegerByLength(operandLengths[1]);
-        }
-        minQuotient = Math.ceil(Math.pow(10, operandLengths[0] - 1) / divisor);
-        // maxQuotient is inclusive.
-        maxQuotient = Math.floor(
-          (Math.pow(10, operandLengths[0]) - 1) / divisor
-        );
-      }
-      const quotient = getRandomInteger(minQuotient, maxQuotient + 1);
+      // operandLengths[0] = Quotient length, operandLengths[1] = Divisor length
+      const quotientLength = operandLengths[0];
+      const divisorLength = operandLengths[1];
+
+      const quotient =
+        quotientLength === 1
+          ? getRandomInteger(2, 10)
+          : getRandomIntegerByLength(quotientLength);
+
+      const divisor =
+        divisorLength === 1
+          ? getRandomInteger(2, 10)
+          : getRandomIntegerByLength(divisorLength);
+
       const dividend = divisor * quotient;
       return [dividend, divisor];
   }
