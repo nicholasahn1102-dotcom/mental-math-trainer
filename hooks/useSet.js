@@ -167,8 +167,7 @@ function getOperands(operation, operandLengths) {
     case 'MULTIPLICATION':
       return operandLengths.map((length) =>
         length === 1
-          ? // Exclude 1.
-            getRandomInteger(2, 10)
+          ? getRandomInteger(2, 10)
           : getRandomIntegerByLength(length)
       );
     case 'SUBTRACTION':
@@ -181,21 +180,25 @@ function getOperands(operation, operandLengths) {
       const subtrahend = getRandomInteger(minMinuend - 1, minuend);
       return [minuend, subtrahend];
     case 'DIVISION':
-      // operandLengths[0] = Quotient length, operandLengths[1] = Divisor length
       const quotientLength = operandLengths[0];
       const divisorLength = operandLengths[1];
+      const targetDividendLength = quotientLength + divisorLength;
 
-      const quotient =
-        quotientLength === 1
-          ? getRandomInteger(2, 10)
-          : getRandomIntegerByLength(quotientLength);
+      let dividend, divisor, quotient;
+      do {
+        quotient =
+          quotientLength === 1
+            ? getRandomInteger(2, 10)
+            : getRandomIntegerByLength(quotientLength);
 
-      const divisor =
-        divisorLength === 1
-          ? getRandomInteger(2, 10)
-          : getRandomIntegerByLength(divisorLength);
+        divisor =
+          divisorLength === 1
+            ? getRandomInteger(2, 10)
+            : getRandomIntegerByLength(divisorLength);
 
-      const dividend = divisor * quotient;
+        dividend = divisor * quotient;
+      } while (dividend.toString().length !== targetDividendLength);
+
       return [dividend, divisor];
   }
 }
