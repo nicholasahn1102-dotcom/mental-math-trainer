@@ -33,7 +33,7 @@ export default function useSet(
 
   const appendDigit = useCallback(
     (digit) => {
-      if (answerString.length >= maxAnswerLength + 5) { // allow room for decimal points
+      if (answerString.length >= maxAnswerLength + 6) {
         return;
       }
       if (inputDirection === 'RIGHT_TO_LEFT') {
@@ -149,8 +149,9 @@ function getMaxAnswerLength(operands, operation, settingsOperandLengths) {
     case 'SUBTRACTION':
       return actualOperandLengths[0];
     case 'DIVISION':
+      return settingsOperandLengths[0];
     case 'SQUARE_ROOT':
-      return settingsOperandLengths[0] + 6; // allow decimal places
+      return Math.ceil(settingsOperandLengths[0] / 2) + 6;
     case 'MULTIPLICATION':
       return actualOperandLengths[0] + actualOperandLengths[1];
   }
@@ -208,10 +209,10 @@ function getOperands(operation, operandLengths) {
       return [dividend, divisor];
     case 'SQUARE_ROOT':
       const rootLength = operandLengths[0];
-      const root =
+      const radicand =
         rootLength === 1
           ? getRandomInteger(2, 10)
           : getRandomIntegerByLength(rootLength);
-      return [root * root];
+      return [radicand];
   }
 }

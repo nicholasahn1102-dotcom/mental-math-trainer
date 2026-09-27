@@ -26,15 +26,15 @@ export default function Problem({
   answerString
 }) {
   const operator = OPERATORS[operation];
-  const answerWidthClass = ANSWER_WIDTHS[maxAnswerLength] || 'w-[12ch]';
+  const answerWidthClass = ANSWER_WIDTHS[maxAnswerLength] || 'w-[14ch]';
 
   if (operation === 'SQUARE_ROOT') {
     return (
       <div className='w-full flex justify-start pl-16 sm:pl-24 my-auto'>
-        <div className='flex items-center text-zinc-900 text-3xl sm:text-5xl tabular-nums whitespace-nowrap'>
-          <span className='pr-1'>{operator}</span>
+        <div className='flex items-center text-zinc-900 text-4xl sm:text-7xl tabular-nums whitespace-nowrap'>
+          <span className='pr-1 font-light'>{operator}</span>
           <span className='w-[10ch] text-left inline-block'>{operands[0]}</span>
-          <span className='px-2'>=</span>
+          <span className='px-3'>=</span>
           <span className={`${answerWidthClass} text-left inline-block empty:after:content-["\\200B"]`}>
             {answerString}
           </span>
@@ -45,11 +45,11 @@ export default function Problem({
 
   return (
     <div className='w-full flex justify-start pl-16 sm:pl-24 my-auto'>
-      <div className='flex items-center text-zinc-900 text-3xl sm:text-5xl tabular-nums whitespace-nowrap'>
+      <div className='flex items-center text-zinc-900 text-4xl sm:text-7xl tabular-nums whitespace-nowrap'>
         <span className='w-[8ch] text-right inline-block'>{operands[0]}</span>
         <span className='w-[3ch] text-center inline-block'>{operator}</span>
         <span className='w-[8ch] text-left inline-block'>{operands[1]}</span>
-        <span className='px-2'>=</span>
+        <span className='px-3'>=</span>
         <span className={`${answerWidthClass} text-left inline-block empty:after:content-["\\200B"]`}>
           {answerString}
         </span>
