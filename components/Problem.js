@@ -29,7 +29,7 @@ export default function Problem({
   const answerWidthClass = ANSWER_WIDTHS[maxAnswerLength] || 'w-[12ch]';
 
   return (
-    <div className='flex items-center justify-center gap-3 self-center text-zinc-900 text-4xl sm:text-6xl tabular-nums whitespace-nowrap px-4 my-auto'>
+    <div className='flex items-center justify-center gap-3 self-center text-white text-4xl sm:text-6xl tabular-nums whitespace-nowrap px-4 my-auto'>
       {operation === 'SQUARE_ROOT' ? (
         <>
           <span>{operator}</span>
@@ -43,7 +43,7 @@ export default function Problem({
         </>
       )}
       <span>=</span>
-      <span className={`${answerWidthClass} text-left inline-block empty:after:content-["\\200B"]`}>
+      <span className={`${answerWidthClass} text-left inline-block empty:after:content-["\\200B"] text-white`}>
         {answerString}
       </span>
     </div>
