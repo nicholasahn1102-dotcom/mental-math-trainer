@@ -1,8 +1,5 @@
 import { OPERATORS } from 'utils/format';
 
-// Tailwind requires unbroken class strings.
-// Add an extra ch because tabular numbers are slightly wider than proportional
-// numbers.
 const ANSWER_WIDTHS = {
   1: 'w-[2ch]',
   2: 'w-[3ch]',
@@ -29,34 +26,33 @@ export default function Problem({
   answerString
 }) {
   const operator = OPERATORS[operation];
-  const answerWidthClass = ANSWER_WIDTHS[maxAnswerLength];
-  let textSizeClass;
-  if (maxAnswerLength <= 8) {
-    textSizeClass = 'text-5xl sm:text-7xl';
-  } else if (maxAnswerLength <= 12) {
-    textSizeClass = 'text-4xl sm:text-6xl md:text-7xl';
-  } else {
-    textSizeClass = 'text-3xl sm:text-5xl md:text-6xl lg:text-7xl';
+  const answerWidthClass = ANSWER_WIDTHS[maxAnswerLength] || 'w-[12ch]';
+
+  if (operation === 'SQUARE_ROOT') {
+    return (
+      <div className='w-full flex justify-start pl-16 sm:pl-24 my-auto'>
+        <div className='flex items-center text-zinc-900 text-3xl sm:text-5xl tabular-nums whitespace-nowrap'>
+          <span className='pr-1'>{operator}</span>
+          <span className='w-[10ch] text-left inline-block'>{operands[0]}</span>
+          <span className='px-2'>=</span>
+          <span className={`${answerWidthClass} text-left inline-block empty:after:content-["\\200B"]`}>
+            {answerString}
+          </span>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div
-      className={`flex flex-col gap-1 self-center text-right ${textSizeClass} tabular-nums`}
-    >
-      <div className='mx-2 flex flex-col gap-1'>
-        <div className='ml-12'>{operands[0]}</div>
-        <div className='flex justify-between'>
-          {operator}
-          <div className='ml-4'>{operands[1]}</div>
-        </div>
-      </div>
-      <div className='h-1 bg-white' />
-      {/* Display a zero width space if the answer is empty to ensure a
-            consistent height. */}
-      <div
-        className={`mx-2 ${answerWidthClass} self-end empty:after:content-["\\200B"]`}
-      >
-        {answerString}
+    <div className='w-full flex justify-start pl-16 sm:pl-24 my-auto'>
+      <div className='flex items-center text-zinc-900 text-3xl sm:text-5xl tabular-nums whitespace-nowrap'>
+        <span className='w-[8ch] text-right inline-block'>{operands[0]}</span>
+        <span className='w-[3ch] text-center inline-block'>{operator}</span>
+        <span className='w-[8ch] text-left inline-block'>{operands[1]}</span>
+        <span className='px-2'>=</span>
+        <span className={`${answerWidthClass} text-left inline-block empty:after:content-["\\200B"]`}>
+          {answerString}
+        </span>
       </div>
     </div>
   );

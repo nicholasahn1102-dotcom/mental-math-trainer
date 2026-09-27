@@ -33,7 +33,7 @@ export default function useSet(
 
   const appendDigit = useCallback(
     (digit) => {
-      if (answerString.length >= maxAnswerLength) {
+      if (answerString.length >= maxAnswerLength + 5) { // allow room for decimal points
         return;
       }
       if (inputDirection === 'RIGHT_TO_LEFT') {
@@ -66,7 +66,7 @@ export default function useSet(
 
   useEffect(() => {
     const handleKeyDown = ({ key }) => {
-      if (/^\d$/.test(key)) {
+      if (/^\d$/.test(key) || key === '.') {
         handleKeypadPress(key);
       } else if (['Backspace', 'Delete'].includes(key)) {
         handleKeypadPress('BACKSPACE');
@@ -86,19 +86,24 @@ export default function useSet(
     let correctAnswer;
     switch (operation) {
       case 'ADDITION':
-        correctAnswer = BigInt(operands[0]) + BigInt(operands[1]);
+        correctAnswer = Number(operands[0]) + Number(operands[1]);
         break;
       case 'SUBTRACTION':
-        correctAnswer = BigInt(operands[0]) - BigInt(operands[1]);
+        correctAnswer = Number(operands[0]) - Number(operands[1]);
         break;
       case 'MULTIPLICATION':
-        correctAnswer = BigInt(operands[0]) * BigInt(operands[1]);
+        correctAnswer = Number(operands[0]) * Number(operands[1]);
         break;
       case 'DIVISION':
-        correctAnswer = BigInt(operands[0]) / BigInt(operands[1]);
+        correctAnswer = Number(operands[0]) / Number(operands[1]);
+        break;
+      case 'SQUARE_ROOT':
+        correctAnswer = Math.sqrt(Number(operands[0]));
         break;
     }
-    if (BigInt(answerString) === correctAnswer) {
+
+    const userValue = parseFloat(answerString);
+    if (!isNaN(userValue) && Math.abs(userValue - correctAnswer) <= 0.00001) {
       const centiseconds = Math.floor((Date.now() - problemStartTime) / 10);
       const problem = {
         operation,
@@ -144,7 +149,8 @@ function getMaxAnswerLength(operands, operation, settingsOperandLengths) {
     case 'SUBTRACTION':
       return actualOperandLengths[0];
     case 'DIVISION':
-      return settingsOperandLengths[0];
+    case 'SQUARE_ROOT':
+      return settingsOperandLengths[0] + 6; // allow decimal places
     case 'MULTIPLICATION':
       return actualOperandLengths[0] + actualOperandLengths[1];
   }
@@ -200,5 +206,12 @@ function getOperands(operation, operandLengths) {
       } while (dividend.toString().length !== targetDividendLength);
 
       return [dividend, divisor];
+    case 'SQUARE_ROOT':
+      const rootLength = operandLengths[0];
+      const root =
+        rootLength === 1
+          ? getRandomInteger(2, 10)
+          : getRandomIntegerByLength(rootLength);
+      return [root * root];
   }
 }
