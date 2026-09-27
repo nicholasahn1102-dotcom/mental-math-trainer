@@ -28,24 +28,20 @@ export default function Problem({
   const operator = OPERATORS[operation];
   const answerWidthClass = ANSWER_WIDTHS[maxAnswerLength] || 'w-[12ch]';
 
-  if (operation === 'SQUARE_ROOT') {
-    return (
-      <div className='flex items-center justify-center gap-3 self-center text-zinc-900 text-4xl sm:text-6xl tabular-nums whitespace-nowrap px-4 my-auto'>
-        <span>{operator}</span>
-        <span>{operands[0]}</span>
-        <span>=</span>
-        <span className={`${answerWidthClass} text-left inline-block empty:after:content-["\\200B"]`}>
-          {answerString}
-        </span>
-      </div>
-    );
-  }
-
   return (
     <div className='flex items-center justify-center gap-3 self-center text-zinc-900 text-4xl sm:text-6xl tabular-nums whitespace-nowrap px-4 my-auto'>
-      <span>{operands[0]}</span>
-      <span>{operator}</span>
-      <span>{operands[1]}</span>
+      {operation === 'SQUARE_ROOT' ? (
+        <>
+          <span>{operator}</span>
+          <span>{operands[0]}</span>
+        </>
+      ) : (
+        <>
+          <span>{operands[0]}</span>
+          <span>{operator}</span>
+          <span>{operands[1]}</span>
+        </>
+      )}
       <span>=</span>
       <span className={`${answerWidthClass} text-left inline-block empty:after:content-["\\200B"]`}>
         {answerString}
